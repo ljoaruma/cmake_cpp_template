@@ -11,13 +11,16 @@ if (WIN32)
 endif()
 FetchContent_MakeAvailable(googletest)
 
+include(GoogleTest)
+enable_testing()
+
 add_executable(test)
 target_include_directories(test PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
 target_sources(test PRIVATE src/main_test.cpp)
-target_sources(test PRIVATE ${CMAKE_SOURCE_DIR}/src/main.cpp)
+#target_sources(test PRIVATE ${CMAKE_SOURCE_DIR}/src/main.cpp)
 
-include(GoogleTest)
+target_link_libraries(test GTest::gtest_main)
 
 gtest_discover_tests(test)
 
