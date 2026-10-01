@@ -1,0 +1,6 @@
+{
+    "cmake.coverageInfoFiles": [
+        "${command:cmake.buildDirectory}/coverage.info"
+    ],
+    "cmake.postRunCoverageTarget": "generate_coverage_info"
+}

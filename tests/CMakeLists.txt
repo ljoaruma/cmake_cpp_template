@@ -36,7 +36,7 @@ target_include_directories(main-gtest PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
 ## gtestオプション
 
-target_compile_options(main-gtest PRIVATE -coverage)
+target_compile_options(main-gtest PRIVATE -coverage -O0 -g)
 target_link_options(main-gtest PRIVATE -coverage)
 
 target_link_libraries(main-gtest GTest::gtest)
@@ -48,3 +48,13 @@ gtest_discover_tests(main-gtest)
 # main ソース
 
 target_sources(main-gtest PRIVATE src/main_test.cpp)
+
+# カバレッジ集計用のカスタムターゲット定義
+find_program(LCOV_PATH lcov)
+if(LCOV_PATH)
+    add_custom_target(generate_coverage_info
+        COMMAND ${LCOV_PATH} --ignore-errors mismatch --rc branch_coverage=1 --directory ${CMAKE_BINARY_DIR} --capture --output-file ${CMAKE_BINARY_DIR}/coverage_all.info
+        COMMAND ${LCOV_PATH} --extract ${CMAKE_BINARY_DIR}/coverage_all.info "${CMAKE_SOURCE_DIR}/tests/*" --extract ${CMAKE_BINARY_DIR}/coverage_all.info "${CMAKE_SOURCE_DIR}/src/*" --ignore-errors unused --rc branch_coverage=1 --output-file ${CMAKE_BINARY_DIR}/coverage.info
+        COMMENT "Generating LCOV coverage info file..."
+    )
+endif()
